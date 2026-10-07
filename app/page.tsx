@@ -23,8 +23,9 @@ export default function Page() {
   const [tiles, setTiles] = useState(shuffledTiles)
   const [selectedTile, setSelectedTile] = useState<number | null>(null)
   const [moves, setMoves] = useState(0)
+  const [completed, setCompleted] = useState(false)
 
-  const isSolved = useMemo(() => tiles.every((tile, index) => tile === index), [tiles])
+  const isSolved = useMemo(() => completed || tiles.every((tile, index) => tile === index), [completed, tiles])
 
   function selectTile(index: number) {
     if (isSolved) return
@@ -40,6 +41,9 @@ export default function Page() {
     setTiles((currentTiles) => {
       const nextTiles = [...currentTiles]
       ;[nextTiles[selectedTile], nextTiles[index]] = [nextTiles[index], nextTiles[selectedTile]]
+      if (nextTiles.every((tile, tileIndex) => tile === tileIndex)) {
+        setCompleted(true)
+      }
       return nextTiles
     })
     setMoves((currentMoves) => currentMoves + 1)
@@ -50,6 +54,7 @@ export default function Page() {
     setTiles(shuffledTiles())
     setSelectedTile(null)
     setMoves(0)
+    setCompleted(false)
   }
 
   if (isSolved) {
