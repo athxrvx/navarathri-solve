@@ -95,7 +95,6 @@ export default function Page() {
             A festive challenge
           </div>
           <h1 className="font-serif text-[42px] leading-[0.98] tracking-[-0.045em] text-[#7c2424]">Unscramble the<br /><span className="text-[#d56a25]">celebration</span></h1>
-          <p className="mx-auto mt-4 max-w-[290px] text-[15px] leading-6 text-[#805b4e]">Put the pieces in place to reveal a special Navarathri wish from your CSE, AIML & CSD family.</p>
         </section>
 
         <section aria-label="Navarathri image puzzle" className="relative rounded-[28px] border-4 border-[#e6a94b] bg-[#d47a26] p-2.5 shadow-[0_16px_35px_rgba(122,50,25,0.16)]">
