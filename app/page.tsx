@@ -109,18 +109,16 @@ export default function Page() {
               const isSelected = selectedTile === index
               return (
                 <button
-                  key={`${tile}-${index}`}
+                  key={tile}
                   type="button"
                   aria-label={`Puzzle tile ${index + 1}${isSelected ? ', selected' : ''}`}
                   onClick={() => selectTile(index)}
                   className={`relative overflow-hidden rounded-[10px] border-2 bg-[#df8a3b] transition duration-200 tile-enter ${isSelected ? 'z-10 scale-[0.94] border-[#fff4c9] shadow-[0_0_0_3px_#a9322c]' : 'border-[#f8dca0]/80 hover:brightness-105 active:scale-[0.97]'}`}
                 >
-                  <img
-                    src="/navarathri-puzzle.png"
-                    alt=""
+                  <span
                     aria-hidden="true"
-                    className="pointer-events-none absolute max-w-none object-fill"
-                    style={{ width: '300%', height: '300%', left: `${column * -100}%`, top: `${row * -100}%` }}
+                    className="pointer-events-none absolute inset-0 bg-[length:300%_300%] bg-no-repeat"
+                    style={{ backgroundImage: 'url(/navarathri-puzzle.png)', backgroundPosition: `${column * 50}% ${row * 50}%` }}
                   />
                   {isSelected && <span className="absolute inset-0 flex items-center justify-center bg-[#a9322c]/35"><Check className="size-7 text-white" strokeWidth={3} /></span>}
                 </button>
