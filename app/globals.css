@@ -153,6 +153,154 @@
   }
 }
 
+.page-enter {
+  animation: page-enter 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.page-enter-delay-1 {
+  animation-delay: 100ms;
+}
+
+.page-enter-delay-2 {
+  animation-delay: 180ms;
+}
+
+.tile-enter {
+  animation: tile-enter 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.tile-enter:nth-child(2) { animation-delay: 45ms; }
+.tile-enter:nth-child(3) { animation-delay: 90ms; }
+.tile-enter:nth-child(4) { animation-delay: 135ms; }
+.tile-enter:nth-child(5) { animation-delay: 180ms; }
+.tile-enter:nth-child(6) { animation-delay: 225ms; }
+.tile-enter:nth-child(7) { animation-delay: 270ms; }
+.tile-enter:nth-child(8) { animation-delay: 315ms; }
+.tile-enter:nth-child(9) { animation-delay: 360ms; }
+
+.puzzle-shell {
+  animation-name: puzzle-enter;
+}
+
+.celebration-screen {
+  animation: celebration-screen 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.celebration-glow {
+  background: radial-gradient(circle at center, rgba(245, 197, 109, 0.2), transparent 42%);
+  animation: glow-pulse 2.4s ease-in-out infinite;
+}
+
+.celebration-badge {
+  animation: badge-pop 900ms cubic-bezier(0.16, 1, 0.3, 1) 250ms both, badge-float 3s ease-in-out 1.2s infinite;
+}
+
+.celebration-ring {
+  animation: ring-pulse 3s ease-out infinite;
+}
+
+.celebration-ring-delayed {
+  animation-delay: 900ms;
+}
+
+.celebration-copy {
+  animation: copy-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.celebration-copy-one { animation-delay: 450ms; }
+.celebration-copy-two { animation-delay: 560ms; }
+.celebration-copy-three { animation-delay: 760ms; }
+
+.celebration-divider {
+  animation: divider-grow 700ms ease-out 650ms both;
+}
+
+.celebration-button {
+  animation: copy-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) 950ms both;
+}
+
+.celebration-confetti span {
+  position: absolute;
+  left: calc(5% + (var(--i) * 5%));
+  top: -8%;
+  width: 7px;
+  height: 15px;
+  border-radius: 999px;
+  background: #f5c56d;
+  opacity: 0;
+  transform: rotate(calc(var(--i) * 31deg));
+  animation: confetti-fall 2.8s ease-out calc(var(--i) * 90ms) both;
+}
+
+.celebration-confetti span:nth-child(3n) { background: #fff0c9; }
+.celebration-confetti span:nth-child(4n) { background: #e66f3b; }
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(-14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes tile-enter {
+  from { opacity: 0; transform: scale(0.82) rotate(-4deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes puzzle-enter {
+  from { opacity: 0; transform: translateY(18px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes celebration-screen {
+  from { opacity: 0; transform: scale(1.04); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.45; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+
+@keyframes badge-pop {
+  0% { opacity: 0; transform: scale(0.35) rotate(-18deg); }
+  70% { transform: scale(1.12) rotate(5deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
+}
+
+@keyframes badge-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes ring-pulse {
+  0% { opacity: 0; transform: scale(0.7); }
+  35% { opacity: 0.8; }
+  100% { opacity: 0; transform: scale(1.25); }
+}
+
+@keyframes copy-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes divider-grow {
+  from { opacity: 0; transform: scaleX(0); }
+  to { opacity: 1; transform: scaleX(1); }
+}
+
+@keyframes confetti-fall {
+  0% { opacity: 0; transform: translateY(0) rotate(0); }
+  12% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(118vh) translateX(calc((var(--i) - 9) * 7px)) rotate(500deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
