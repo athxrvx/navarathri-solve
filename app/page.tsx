@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type CSSProperties } from 'react'
+import { useMemo, useState, type CSSProperties } from 'react'
 import { Check, RotateCcw, Sparkles, Trophy } from 'lucide-react'
 
 const GRID_SIZE = 3
@@ -23,9 +23,8 @@ export default function Page() {
   const [tiles, setTiles] = useState(shuffledTiles)
   const [selectedTile, setSelectedTile] = useState<number | null>(null)
   const [moves, setMoves] = useState(0)
-  const [completed, setCompleted] = useState(false)
 
-  const isSolved = completed || tiles.every((tile, tileIndex) => tile === solvedTiles[tileIndex])
+  const isSolved = useMemo(() => tiles.every((tile, index) => tile === index), [tiles])
 
   function selectTile(index: number) {
     if (isSolved) return
@@ -38,22 +37,19 @@ export default function Page() {
       return
     }
 
-    const nextTiles = [...tiles]
-    ;[nextTiles[selectedTile], nextTiles[index]] = [nextTiles[index], nextTiles[selectedTile]]
-    setTiles(nextTiles)
+    setTiles((currentTiles) => {
+      const nextTiles = [...currentTiles]
+      ;[nextTiles[selectedTile], nextTiles[index]] = [nextTiles[index], nextTiles[selectedTile]]
+      return nextTiles
+    })
     setMoves((currentMoves) => currentMoves + 1)
     setSelectedTile(null)
-
-    if (nextTiles.every((tile, tileIndex) => tile === tileIndex)) {
-      setCompleted(true)
-    }
   }
 
   function resetPuzzle() {
     setTiles(shuffledTiles())
     setSelectedTile(null)
     setMoves(0)
-    setCompleted(false)
   }
 
   if (isSolved) {
@@ -113,16 +109,18 @@ export default function Page() {
               const isSelected = selectedTile === index
               return (
                 <button
-                  key={tile}
+                  key={`${tile}-${index}`}
                   type="button"
                   aria-label={`Puzzle tile ${index + 1}${isSelected ? ', selected' : ''}`}
                   onClick={() => selectTile(index)}
                   className={`relative overflow-hidden rounded-[10px] border-2 bg-[#df8a3b] transition duration-200 tile-enter ${isSelected ? 'z-10 scale-[0.94] border-[#fff4c9] shadow-[0_0_0_3px_#a9322c]' : 'border-[#f8dca0]/80 hover:brightness-105 active:scale-[0.97]'}`}
                 >
-                  <span
+                  <img
+                    src="/navarathri-puzzle.png"
+                    alt=""
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 bg-[length:300%_300%] bg-no-repeat"
-                    style={{ backgroundImage: 'url(/navarathri-puzzle.png)', backgroundPosition: `${column * 50}% ${row * 50}%` }}
+                    className="pointer-events-none absolute max-w-none object-fill"
+                    style={{ width: '300%', height: '300%', left: `${column * -100}%`, top: `${row * -100}%` }}
                   />
                   {isSelected && <span className="absolute inset-0 flex items-center justify-center bg-[#a9322c]/35"><Check className="size-7 text-white" strokeWidth={3} /></span>}
                 </button>
