@@ -25,7 +25,7 @@ export default function Page() {
   const [moves, setMoves] = useState(0)
   const [completed, setCompleted] = useState(false)
 
-  const isSolved = completed
+  const isSolved = completed || tiles.every((tile, tileIndex) => tile === solvedTiles[tileIndex])
 
   function selectTile(index: number) {
     if (isSolved) return
