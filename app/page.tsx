@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Check, ChevronRight, RotateCcw, Sparkles, Trophy } from 'lucide-react'
+import { Check, RotateCcw, Sparkles, Trophy } from 'lucide-react'
 
 const GRID_SIZE = 3
 const TILE_COUNT = GRID_SIZE * GRID_SIZE
@@ -50,6 +50,25 @@ export default function Page() {
     setTiles(shuffledTiles())
     setSelectedTile(null)
     setMoves(0)
+  }
+
+  if (isSolved) {
+    return (
+      <main className="min-h-screen overflow-hidden bg-[#a9322c] text-[#fff7ec]">
+        <div className="relative mx-auto flex min-h-screen w-full max-w-md flex-col items-center justify-center px-7 py-12 text-center">
+          <div className="pointer-events-none absolute left-8 top-12 size-24 rounded-full border border-[#f5c56d]/40" />
+          <div className="pointer-events-none absolute bottom-16 right-4 size-40 rounded-full border border-[#f5c56d]/25" />
+          <div className="relative flex size-20 items-center justify-center rounded-full border-2 border-[#f5c56d] bg-[#7c2424] text-[#ffe9ac] shadow-[0_12px_35px_rgba(50,24,21,0.25)]">
+            <Trophy className="size-9" strokeWidth={1.8} />
+          </div>
+          <p className="mt-8 text-[11px] font-bold uppercase tracking-[0.24em] text-[#f5c56d]">Puzzle complete</p>
+          <h1 className="mt-4 font-serif text-[48px] leading-[0.95] tracking-[-0.045em] text-[#fff0c9]">Happy<br /><span className="text-[#f5c56d]">Navaratri!</span></h1>
+          <div className="my-8 h-px w-20 bg-[#f5c56d]/60" />
+          <p className="max-w-[320px] text-[18px] leading-8 text-[#fff0c9]">The Departments of <strong className="font-semibold text-white">CSE, AIML &amp; CSD</strong> of Easwari Engineering College wish you a joyful Navaratri.</p>
+          <button type="button" onClick={resetPuzzle} className="mt-10 rounded-full border border-[#f5c56d] px-5 py-2.5 text-sm font-bold text-[#fff0c9] transition hover:bg-[#7c2424] active:scale-95">Play again</button>
+        </div>
+      </main>
+    )
   }
 
   return (
@@ -109,17 +128,7 @@ export default function Page() {
           <span>Tap a tile, then its destination</span>
         </div>
 
-        {isSolved ? (
-          <section className="mt-6 rounded-[24px] border border-[#e4b458] bg-[#fff0c9] p-5 text-center shadow-[0_10px_25px_rgba(160,74,38,0.1)]" aria-live="polite">
-            <div className="mx-auto mb-2 flex size-11 items-center justify-center rounded-full bg-[#a9322c] text-[#ffe9ac]"><Trophy className="size-5" /></div>
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-[#a04a26]">Puzzle complete</p>
-            <h2 className="mt-2 font-serif text-[25px] leading-tight text-[#7c2424]">Happy Navaratri!</h2>
-            <p className="mt-2 text-sm leading-5 text-[#805b4e]">The Departments of CSE, AIML & CSD of Easwari Engineering College wish you a joyful Navaratri.</p>
-            <button type="button" onClick={resetPuzzle} className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-[#a9322c]">Play again <ChevronRight className="size-4" /></button>
-          </section>
-        ) : (
-          <p className="mt-auto pt-8 text-center text-xs font-medium tracking-wide text-[#b18a76]">May this season bring light, learning & joy.</p>
-        )}
+        <p className="mt-auto pt-8 text-center text-xs font-medium tracking-wide text-[#b18a76]">May this season bring light, learning &amp; joy.</p>
       </div>
     </main>
   )
