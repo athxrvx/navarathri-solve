@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState, type CSSProperties } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { Check, RotateCcw, Sparkles, Trophy } from 'lucide-react'
 
 const GRID_SIZE = 3
@@ -25,7 +25,7 @@ export default function Page() {
   const [moves, setMoves] = useState(0)
   const [completed, setCompleted] = useState(false)
 
-  const isSolved = useMemo(() => completed || tiles.every((tile, index) => tile === index), [completed, tiles])
+  const isSolved = completed
 
   function selectTile(index: number) {
     if (isSolved) return
@@ -38,16 +38,15 @@ export default function Page() {
       return
     }
 
-    setTiles((currentTiles) => {
-      const nextTiles = [...currentTiles]
-      ;[nextTiles[selectedTile], nextTiles[index]] = [nextTiles[index], nextTiles[selectedTile]]
-      if (nextTiles.every((tile, tileIndex) => tile === tileIndex)) {
-        setCompleted(true)
-      }
-      return nextTiles
-    })
+    const nextTiles = [...tiles]
+    ;[nextTiles[selectedTile], nextTiles[index]] = [nextTiles[index], nextTiles[selectedTile]]
+    setTiles(nextTiles)
     setMoves((currentMoves) => currentMoves + 1)
     setSelectedTile(null)
+
+    if (nextTiles.every((tile, tileIndex) => tile === tileIndex)) {
+      setCompleted(true)
+    }
   }
 
   function resetPuzzle() {
