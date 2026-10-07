@@ -113,7 +113,16 @@ export default function Page() {
                   type="button"
                   aria-label={`Puzzle tile ${index + 1}${isSelected ? ', selected' : ''}`}
                   onClick={() => selectTile(index)}
-                  className={`relative overflow-hidden rounded-[10px] border-2 bg-[#df8a3b] transition duration-200 tile-enter ${isSelected ? 'z-10 scale-[0.94] border-[#fff4c9] shadow-[0_0_0_3px_#a9322c]' : 'border-[#f8dca0]/80 hover:brightness-105 active:scale-[0.97]'}`}\n                >\n                  <img\n                    src="/navarathri-puzzle.png"\n                    alt=""\n                    aria-hidden="true"\n                    className="pointer-events-none absolute max-w-none object-fill"\n                    style={{ width: '300%', height: '300%', left: `${column * -100}%`, top: `${row * -100}%` }}\n                  />\n                  {isSelected && <span className="absolute inset-0 flex items-center justify-center bg-[#a9322c]/35"><Check className="size-7 text-white" strokeWidth={3} /></span>}
+                  className={`relative overflow-hidden rounded-[10px] border-2 bg-[#df8a3b] transition duration-200 tile-enter ${isSelected ? 'z-10 scale-[0.94] border-[#fff4c9] shadow-[0_0_0_3px_#a9322c]' : 'border-[#f8dca0]/80 hover:brightness-105 active:scale-[0.97]'}`}
+                >
+                  <img
+                    src="/navarathri-puzzle.png"
+                    alt=""
+                    aria-hidden="true"
+                    className="pointer-events-none absolute max-w-none object-fill"
+                    style={{ width: '300%', height: '300%', left: `${column * -100}%`, top: `${row * -100}%` }}
+                  />
+                  {isSelected && <span className="absolute inset-0 flex items-center justify-center bg-[#a9322c]/35"><Check className="size-7 text-white" strokeWidth={3} /></span>}
                 </button>
               )
             })}
