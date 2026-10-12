@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useMemo, useState, type CSSProperties } from 'react'
-import { ArrowLeft, Check, RotateCcw, Sparkles, Trophy } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
+import { ArrowLeft, Check, RotateCcw, Sparkles, Volume2, VolumeX } from 'lucide-react'
 
 const GRID_SIZE = 3
 const TILE_COUNT = GRID_SIZE * GRID_SIZE
@@ -25,12 +25,29 @@ function shuffledTiles() {
   return tiles
 }
 
+function MusicToggle({ isPlaying, onToggle }: { isPlaying: boolean; onToggle: () => void }) {
+  return <button type="button" onClick={onToggle} aria-label={isPlaying ? 'Mute devotional music' : 'Play devotional music'} title={isPlaying ? 'Mute devotional music' : 'Play devotional music'} className="fixed bottom-5 right-5 z-20 flex size-11 items-center justify-center rounded-full border border-[#e8cda5] bg-[#fffaf1] text-[#a9322c] shadow-[0_8px_20px_rgba(122,50,25,0.16)] transition hover:bg-[#fff0d7] active:scale-95">{isPlaying ? <Volume2 className="size-[18px]" /> : <VolumeX className="size-[18px]" />}</button>
+}
+
 export default function Page() {
   const [imageIndex, setImageIndex] = useState<number | null>(null)
   const [tiles, setTiles] = useState(solvedTiles)
   const [selectedTile, setSelectedTile] = useState<number | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false)
   useEffect(() => {
     setTiles(shuffledTiles())
+  }, [])
+  useEffect(() => {
+    const audio = new Audio('/audio.mp3')
+    audio.loop = true
+    audio.volume = 0.35
+    audioRef.current = audio
+    void audio.play().then(() => setIsMusicPlaying(true)).catch(() => setIsMusicPlaying(false))
+    return () => {
+      audio.pause()
+      audioRef.current = null
+    }
   }, [])
   const [moves, setMoves] = useState(0)
   const image = imageIndex === null ? null : imageChoices[imageIndex]
@@ -62,17 +79,31 @@ export default function Page() {
     setMoves(0)
   }
 
+  function toggleMusic() {
+    const audio = audioRef.current
+    if (!audio) return
+    if (isMusicPlaying) {
+      audio.pause()
+      setIsMusicPlaying(false)
+      return
+    }
+    void audio.play().then(() => setIsMusicPlaying(true)).catch(() => setIsMusicPlaying(false))
+  }
+
   if (image && isSolved) {
     return (
       <main className="min-h-screen overflow-hidden bg-[#a9322c] text-[#fff7ec]">
+        <MusicToggle isPlaying={isMusicPlaying} onToggle={toggleMusic} />
         <div className="relative mx-auto flex min-h-screen w-full max-w-5xl flex-col items-center justify-center px-7 py-12 text-center celebration-screen">
           <div className="celebration-glow pointer-events-none absolute inset-0" />
           <div className="celebration-confetti pointer-events-none absolute inset-0" aria-hidden="true">{Array.from({ length: 24 }, (_, index) => <span key={index} style={{ '--i': index } as CSSProperties} />)}</div>
-          <div className="relative flex size-24 items-center justify-center rounded-full border-2 border-[#f5c56d] bg-[#7c2424] text-[#ffe9ac] shadow-[0_12px_35px_rgba(50,24,21,0.25)] celebration-badge"><Trophy className="size-10" strokeWidth={1.8} /></div>
-          <p className="mt-8 text-[11px] font-bold uppercase tracking-[0.24em] text-[#f5c56d] celebration-copy celebration-copy-one">Puzzle complete</p>
-          <h1 className="mt-4 font-serif text-[clamp(52px,9vw,96px)] leading-[0.95] tracking-[-0.045em] text-[#fff0c9] celebration-copy celebration-copy-two">Happy<br /><span className="text-[#f5c56d]">Navaratri!</span></h1>
+          <div className="mt-4 flex w-full max-w-5xl items-center justify-center gap-4 sm:gap-8 lg:gap-12">
+            <img src="/navarathri-kolam.png" alt="" aria-hidden="true" className="hidden size-28 object-contain opacity-90 sm:block lg:size-40" />
+            <h1 className="shrink-0 font-serif text-[clamp(52px,9vw,96px)] leading-[0.95] tracking-[-0.045em] text-[#fff0c9] celebration-copy celebration-copy-two">Happy<br /><span className="text-[#f5c56d]">Navaratri!</span></h1>
+            <img src="/navarathri-kolam.png" alt="" aria-hidden="true" className="hidden size-28 scale-x-[-1] object-contain opacity-90 sm:block lg:size-40" />
+          </div>
           <div className="my-8 h-px w-24 bg-[#f5c56d]/60 celebration-divider" />
-          <p className="max-w-2xl text-[18px] leading-8 text-[#fff0c9] celebration-copy celebration-copy-three">The Departments of <strong className="font-semibold text-white">CSE, AIML &amp; CSD</strong> of Easwari Engineering College wish you a joyful Navaratri.</p>
+          <p className="max-w-3xl text-[clamp(22px,3vw,30px)] leading-[1.35] text-[#fff0c9] celebration-copy celebration-copy-three">The Departments of <strong className="font-semibold text-white">CSE, IT, CSD &amp; AIML</strong> of Easwari Engineering College wish you a joyful Navaratri.</p>
           <div className="mt-10 flex flex-wrap justify-center gap-3"><button type="button" onClick={resetPuzzle} className="rounded-full border border-[#f5c56d] px-5 py-2.5 text-sm font-bold text-[#fff0c9] transition hover:bg-[#7c2424] active:scale-95 celebration-button">Play again</button><button type="button" onClick={() => setImageIndex(null)} className="rounded-full bg-[#f5c56d] px-5 py-2.5 text-sm font-bold text-[#7c2424] transition hover:bg-[#ffe09a] active:scale-95 celebration-button">Choose another image</button></div>
         </div>
       </main>
@@ -82,6 +113,7 @@ export default function Page() {
   if (!image) {
     return (
       <main className="min-h-screen bg-[#fff7ec] text-[#321815]">
+        <MusicToggle isPlaying={isMusicPlaying} onToggle={toggleMusic} />
         <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col px-5 py-7 sm:px-8 lg:px-12">
           <header className="flex items-center gap-2.5 page-enter"><div className="flex size-10 items-center justify-center rounded-2xl bg-[#a9322c] text-[#ffe8ad] shadow-[0_6px_16px_rgba(169,50,44,0.2)]"><Sparkles className="size-5" /></div><div><p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#a9322c]">Easwari Engineering College</p><p className="mt-0.5 text-sm font-semibold text-[#5b2d24]">Navarathri 2026</p></div></header>
           <section className="mx-auto max-w-3xl pb-10 pt-14 text-center page-enter page-enter-delay-1"><div className="mx-auto mb-4 inline-flex items-center gap-2 rounded-full border border-[#e8c27d] bg-[#fff0cd] px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-[#9a4a16]"><span className="size-1.5 rounded-full bg-[#d96a24]" />Choose your celebration</div><h1 className="font-serif text-[clamp(42px,7vw,76px)] leading-[0.98] tracking-[-0.045em] text-[#7c2424]">Pick an image to<br /><span className="text-[#d56a25]">start the puzzle</span></h1><p className="mx-auto mt-5 max-w-xl text-base leading-7 text-[#8c6657]">Choose your favorite Navaratri scene. It will be scrambled into a 3 × 3 puzzle for you to solve.</p></section>
